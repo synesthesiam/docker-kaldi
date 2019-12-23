@@ -24,18 +24,21 @@ RUN bash /set-atlas-dir.sh
 
 RUN cd / && tar -xvf /kaldi-2019.tar.gz
 
-# Fix things for aarch64 (arm64v8)
-COPY linux_atlas_aarch64.mk /kaldi-master/src/makefiles/
-COPY fix-configure.sh /
-RUN bash /fix-configure.sh
-
 # Install tools
 RUN cd /kaldi-master/tools && \
     make -j $MAKE_THREADS
 
+# Fix things for aarch64 (arm64v8)
+COPY linux_atlas_aarch64.mk /kaldi-master/src/makefiles/
+
+RUN cd /kaldi-master/src && \
+    ./configure --shared --mathlib=ATLAS --use-cuda=no
+
+COPY fix-configure.sh /
+RUN bash /fix-configure.sh
+
 # Build Kaldi
 RUN cd /kaldi-master/src && \
-    ./configure --shared --mathlib=ATLAS --use-cuda=no && \
     make depend -j $MAKE_THREADS && \
     make -j $MAKE_THREADS
 

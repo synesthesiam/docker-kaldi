@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
+set -e
 this_dir="$( cd "$( dirname "$0" )" && pwd )"
+
+if [[ -z "$(command -v qemu-arm-static)" ]]; then
+    echo "Need to install qemu-user-static"
+    sudo apt-get update
+    sudo apt-get install qemu-arm-static
+fi
 
 # Copy qemu for ARM architectures
 mkdir -p "${this_dir}/etc"
