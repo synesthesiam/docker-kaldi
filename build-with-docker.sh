@@ -38,10 +38,10 @@ for docker_arch in "${docker_archs[@]}"; do
         -t "${docker_tag}"
 
     # Copy out build artifacts
-    # mkdir -p "${this_dir}/dist"
-    # docker run -it \
-    #     -v "${this_dir}/dist:/dist" \
-    #     -u "$(id -u):$(id -g)" \
-    #     "${docker_tag}" \
-    #     /bin/tar -czvf  -T /files-to-keep.txt "/dist/kaldi-2019-${friendly_arch}.tar.gz"
+    mkdir -p "${this_dir}/dist"
+    docker run -it \
+        -v "${this_dir}/dist:/dist" \
+        -u "$(id -u):$(id -g)" \
+        "${docker_tag}" \
+        /bin/tar -czvf "/dist/kaldi-2019-${friendly_arch}.tar.gz" -T /files-to-keep.txt 
 done
