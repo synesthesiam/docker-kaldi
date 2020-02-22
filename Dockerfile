@@ -16,7 +16,7 @@ RUN apt-get install -y --no-install-recommends \
         git zlib1g-dev
 
 
-COPY download/kaldi-2019.tar.gz /
+COPY download/kaldi-2020.tar.gz /
 
 # Set ATLASLIBDIR
 COPY set-atlas-dir.sh /
