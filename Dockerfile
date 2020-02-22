@@ -22,7 +22,7 @@ COPY download/kaldi-2020.tar.gz /
 COPY set-atlas-dir.sh /
 RUN bash /set-atlas-dir.sh
 
-RUN cd / && tar -xvf /kaldi-2019.tar.gz
+RUN cd / && tar -xvf /kaldi-2020.tar.gz
 
 # Install tools
 RUN cd /kaldi-master/tools && \
