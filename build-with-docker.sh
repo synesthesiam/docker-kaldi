@@ -31,7 +31,7 @@ for docker_arch in "${docker_archs[@]}"; do
        exit 1
     fi
 
-    docker_tag="rhasspy/kaldi:2019-${friendly_arch}"
+    docker_tag="rhasspy/kaldi:2020-${friendly_arch}"
 
     docker build "${this_dir}" \
         --build-arg "BUILD_FROM=${docker_arch}/debian:stretch" \
@@ -43,5 +43,5 @@ for docker_arch in "${docker_archs[@]}"; do
         -v "${this_dir}/dist:/dist" \
         -u "$(id -u):$(id -g)" \
         "${docker_tag}" \
-        /bin/tar -czvf "/dist/kaldi-2019-${friendly_arch}.tar.gz" -T /files-to-keep.txt 
+        /bin/tar -czvf "/dist/kaldi-2020-${friendly_arch}.tar.gz" /kaldi
 done
