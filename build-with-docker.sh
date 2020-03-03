@@ -20,6 +20,10 @@ done
 
 # Do Docker builds
 docker_archs=('amd64' 'arm32v7' 'arm64v8')
+if [[ ! -z "$1" ]]; then
+    docker_archs=("$@")
+fi
+
 declare -A friendly_archs
 friendly_archs=(['amd64']='amd64' ['arm32v7']='armhf' ['arm64v8']='aarch64')
 
@@ -31,10 +35,10 @@ for docker_arch in "${docker_archs[@]}"; do
        exit 1
     fi
 
-    docker_tag="rhasspy/kaldi:2019-${friendly_arch}"
+    docker_tag="rhasspy/kaldi:2020-${friendly_arch}"
 
     docker build "${this_dir}" \
-        --build-arg "BUILD_FROM=${docker_arch}/debian:stretch" \
+        --build-arg "BUILD_FROM=cecep-prime:15555/base/ubuntu:bionic" \
         -t "${docker_tag}"
 
     # Copy out build artifacts
@@ -43,5 +47,5 @@ for docker_arch in "${docker_archs[@]}"; do
         -v "${this_dir}/dist:/dist" \
         -u "$(id -u):$(id -g)" \
         "${docker_tag}" \
-        /bin/tar -czvf "/dist/kaldi-2019-${friendly_arch}.tar.gz" -T /files-to-keep.txt 
+        /bin/tar -czvf "/dist/kaldi-2020-${friendly_arch}.tar.gz" /kaldi
 done
