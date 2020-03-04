@@ -44,4 +44,4 @@ RUN cd /kaldi-master/src && \
 
 # Install
 COPY etc/kaldi_dir_files.txt etc/kaldi_flat_files.txt etc/install-kaldi.sh /
-RUN bash /install-kaldi.sh /kaldi-master /kaldi_flat_files.txt /kaldi_dir_files.txt /kaldi
+RUN bash /install-kaldi.sh /kaldi-master /kaldi_flat_files.txt /kaldi_dir_files.txt /
