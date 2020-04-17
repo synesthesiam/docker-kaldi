@@ -1,10 +1,6 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM ubuntu:eoan
 
 ARG MAKE_THREADS=8
-
-COPY etc/qemu-arm-static /usr/bin/
-COPY etc/qemu-aarch64-static /usr/bin/
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -13,7 +9,7 @@ RUN apt-get update && \
         libatlas-base-dev libatlas3-base gfortran \
         automake autoconf unzip sox libtool subversion \
         python3 python \
-        git zlib1g-dev
+        git zlib1g-dev patchelf rsync
 
 COPY download/kaldi-2020.tar.gz /
 
@@ -47,6 +43,16 @@ RUN cd /kaldi-master/src && \
 COPY fix-links.sh /
 RUN bash /fix-links.sh /kaldi-master/src/lib/*.so*
 
-RUN apt-get install patchelf
-COPY etc/install-kaldi.sh etc/kaldi_dir_files.txt etc/kaldi_flat_files.txt /
-RUN bash /install-kaldi.sh /kaldi-master /kaldi_flat_files.txt /kaldi_dir_files.txt /
+# Create dist
+RUN mkdir -p /dist/kaldi/egs && \
+    cp -R /kaldi-master/egs/wsj /dist/kaldi/egs/ && \
+    rsync -av --exclude='*.o' --exclude='*.cc' /kaldi-master/src/bin/ /dist/kaldi/ && \
+    cp /kaldi-master/src/lib/*.so* /dist/kaldi/ && \
+    rsync -av --include='*.so*' --include='fst' --exclude='*' /kaldi-master/tools/openfst/lib/ /dist/kaldi/ && \
+    cp /kaldi-master/tools/openfst/bin/ /dist/kaldi/
+
+# Fix rpaths
+RUN find /dist/kaldi/ -type f -exec patchelf --set-rpath '$ORIGIN' {} \;
+
+# Compress
+RUN tar -C /dist -czvf /kaldi.tar.gz .
