@@ -11,13 +11,13 @@ RUN apt-get update && \
         python3 python \
         git zlib1g-dev patchelf rsync
 
-COPY download/kaldi-2020.tar.gz /
+COPY download/kaldi-2021.tar.gz /
 
 # Set ATLASLIBDIR
 COPY set-atlas-dir.sh /
 RUN bash /set-atlas-dir.sh
 
-RUN cd / && tar -xvf /kaldi-2020.tar.gz
+RUN cd / && tar -xvf /kaldi-2021.tar.gz
 COPY download/tools/* /download/
 ENV DOWNLOAD_DIR=/download
 
